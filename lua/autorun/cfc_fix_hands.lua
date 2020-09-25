@@ -1,3 +1,5 @@
+AddCSLuaFile()
+
 local function fixHands()
     local hands = scripted_ents.GetStored("gmod_hands").t
 
