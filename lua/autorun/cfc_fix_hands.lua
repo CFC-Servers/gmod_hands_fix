@@ -8,20 +8,17 @@ local function fixHands()
         self:DrawShadow( false )
         self:SetTransmitWithParent( true ) -- Transmit only when the viewmodel does!
 
-        if not CLIENT then return end
-        if self:GetOwner() ~= LocalPlayer() then return end
-
         self.viewHookID = "HandsViewModelChanged_" .. self:EntIndex()
 
-        self:CallOnRemove( "RemoveViewModelChangedHook", function()
-            hook.Remove( "OnViewModelChanged", self.viewHookID )
-        end )
+        if ( SERVER or self:GetOwner() == LocalPlayer() ) then
+            hook.Add( "OnViewModelChanged", self.viewHookID, self.ViewModelChanged )
 
-        hook.Add( "OnViewModelChanged", self.viewHookID, function(...)
-            self:ViewModelChanged( ... )
-        end )
+            self:CallOnRemove( "RemoveViewModelChangedHook", function()
+                hook.Remove( "OnViewModelChanged", self.viewHookID )
+            end )
+        end
     end
 end
 
 
-hook.Add( "Initialize", "CFC_FixHands", fixHands )
+hook.Add( "InitPostEntity", "CFC_FixHands", fixHands )
