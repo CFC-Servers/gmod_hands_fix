@@ -1,6 +1,6 @@
 AddCSLuaFile()
 
-local function fixHands()
+FixHands = function()
     local hands = scripted_ents.GetStored("gmod_hands").t
 
     hands.Initialize = function(self)
@@ -21,4 +21,7 @@ local function fixHands()
 end
 
 
-hook.Add( "InitPostEntity", "CFC_FixHands", fixHands )
+hook.Add( "Think", "CFC_FixHands", function()
+    hook.Remove( "Think", "CFC_FixHands" )
+    FixHands()
+end )
