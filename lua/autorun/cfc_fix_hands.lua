@@ -11,7 +11,9 @@ FixHands = function()
         self.viewHookID = "HandsViewModelChanged_" .. self:EntIndex()
 
         if ( SERVER or self:GetOwner() == LocalPlayer() ) then
-            hook.Add( "OnViewModelChanged", self.viewHookID, self.ViewModelChanged )
+            hook.Add( "OnViewModelChanged", self.viewHookID, function( ... )
+                self:ViewModelChanged( ... )
+            end )
 
             self:CallOnRemove( "RemoveViewModelChangedHook", function()
                 hook.Remove( "OnViewModelChanged", self.viewHookID )
@@ -23,14 +25,4 @@ end
 hook.Add( "Think", "CFC_FixHands", function()
     hook.Remove( "Think", "CFC_FixHands" )
     FixHands()
-
-    if SERVER then return end
-
-    -- Remove all existing hooks with the bad thing and re-initialize them with the good thing
-    for identifier in pairs( hook.GetTable()["OnViewModelChanged"] ) do
-        if IsEntity( identifier ) and identifier:GetClass() == "gmod_hands" then
-            hook.Remove( "OnViewModelChanged", identifier )
-            identifier:Initialize()
-        end
-    end
 end )
