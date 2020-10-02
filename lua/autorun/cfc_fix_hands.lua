@@ -24,6 +24,8 @@ hook.Add( "Think", "CFC_FixHands", function()
     hook.Remove( "Think", "CFC_FixHands" )
     FixHands()
 
+    if SERVER then return end
+
     -- Remove all existing hooks with the bad thing and re-initialize them with the good thing
     for identifier in pairs( hook.GetTable()["OnViewModelChanged"] ) do
         if IsEntity( identifier ) and identifier:GetClass() == "gmod_hands" then
